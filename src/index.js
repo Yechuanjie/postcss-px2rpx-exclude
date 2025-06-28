@@ -81,16 +81,16 @@ module.exports = postcss.plugin("postcss-px2rpx-exclude", function (options) {
       return;
     }
 
-    if (opts.exclude)
-      for (let i = 0; i < css.nodes.length; i++) {
-        if (css.nodes[i].type === "comment") {
-          if (css.nodes[i].text === "postcss-px2rpx-exclude disable") {
-            return;
-          } else {
-            break;
-          }
+    // skip if the file contains the disable comment
+    for (let i = 0; i < css.nodes.length; i++) {
+      if (css.nodes[i].type === "comment") {
+        if (css.source.input.css.includes("postcss-px2rpx-exclude disable")) {
+          return;
+        } else {
+          break;
         }
       }
+    }
 
     // delete code between comment in RN
     if (options.platform === "rn") {
